@@ -1,4 +1,4 @@
-// @ts-check
+ // @ts-check
 const { test, expect } = require('@playwright/test');
 
 test('byCSS', async ({ page }) => {
