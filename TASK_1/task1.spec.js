@@ -54,4 +54,4 @@ test('byTitle', async ({ page }) => {
 test('byLabel', async ({ page }) => {
         await page.goto('https://onliner.by/');
         await page.getByLabel('Password')
-    });
+   });
