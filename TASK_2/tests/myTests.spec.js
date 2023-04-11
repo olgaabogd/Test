@@ -13,9 +13,9 @@ test('locator.fill', async ({ page }) => {
 
 test('locator.check.radiobutton', async ({ page }) => {
   await page.goto('https://demoqa.com/automation-practice-form');
-  await page.getByText('Other').check(); 
-  const locator2 = page.getByText('Other');
-  await expect(locator2).toBeChecked();
+  const otherText = page.getByText('Other');
+  await otherText.check(); 
+  await expect(otherText).toBeChecked();
 
 });
 
