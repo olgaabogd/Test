@@ -4,8 +4,8 @@ const { test, expect } = require('@playwright/test');
 
 test('locator.fill', async ({ page }) => {
   await page.goto('https://demoqa.com/automation-practice-form');
-  await page.locator('//*[@id="firstName"]').fill('Olga');
-  const locator1 = page.locator('//*[@id="firstName"]');
+  await page.locator('#firstName').fill('Olga');
+  const locator1 = page.locator('#firstName');
   await expect(locator1).toHaveValue('Olga');
 
 });
