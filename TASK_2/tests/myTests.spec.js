@@ -42,9 +42,8 @@ test('locator.click', async ({ page }) => {
 
 test('locator.hover', async ({ page }) => {
   await page.goto('https://demoqa.com/menu#');
-  const element = page.getByRole('listitem');
-  await element.filter({ hasText: 'Main Item 1'}).hover();
-  const locator = element.filter({ hasText: 'Main Item 1'});
+  const locator = page.locator('#nav li:has-text("Main Item 1")');
+  await locator.hover();
   await expect(locator).toHaveCSS('background-color', 'rgb(0, 63, 32)');
 });
 
