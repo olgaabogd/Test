@@ -55,8 +55,8 @@ test('locator.hover', async ({ page }) => {
 test('locator.setInputFiles', async ({ page }) => {
   const testDoc = 'TASK_2/tests/testDoc.txt';
   await page.goto('https://demoqa.com/upload-download');
-  await page.locator('//*[@id="uploadFile"]').setInputFiles(testDoc);
-  const locator7 = page.locator('//*[@id="uploadedFilePath"]');
+  await page.locator('#uploadFile').setInputFiles(testDoc);
+  const locator7 = page.locator('#uploadedFilePath');
   await expect(locator7).toHaveText('C:\\fakepath\\testDoc.txt');
 
 });
