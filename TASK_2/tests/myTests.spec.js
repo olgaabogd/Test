@@ -46,10 +46,9 @@ test('locator.click', async ({ page }) => {
 
 test('locator.hover', async ({ page }) => {
   await page.goto('https://demoqa.com/menu#');
-  await page.locator('//*[@id="nav"]/li[1]').hover({force: true});
-  const locator6 = page.locator('//*[@id="nav"]/li[1]');
+  await page.getByRole('listitem').filter({ hasText: 'Main Item 1'}).hover();
+  const locator6 = page.getByRole('listitem').filter({ hasText: 'Main Item 1'});
   await expect(locator6).toHaveCSS('background-color', 'rgb(0, 63, 32)');
-
 });
 
 test('locator.setInputFiles', async ({ page }) => {
