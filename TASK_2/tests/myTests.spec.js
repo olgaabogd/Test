@@ -74,7 +74,7 @@ test('locator.drag&drop', async ({ page }) => {
   await page.goto('https://demoqa.com/droppable');
   await page.locator('//*[@id="draggable"]').hover();
   await page.mouse.down();
-  await page.locator('xpath=/html/body/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div[2]').hover();
+  await page.locator('#simpleDropContainer #droppable').hover();
   await page.mouse.up();
   await expect (page.getByText('Dropped')).toBeVisible()
 
