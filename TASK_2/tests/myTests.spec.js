@@ -30,8 +30,8 @@ test('locator.check.checkbox', async ({ page }) => {
 
 test('locator.selectOption', async ({ page }) => {
   await page.goto('https://demoqa.com/select-menu');
-  await page.locator('//*[@id="oldSelectMenu"]').selectOption('Blue');
-  const locator4 = page.locator('//*[@id="oldSelectMenu"]');
+  await page.locator('#oldSelectMenu').selectOption('Blue');
+  const locator4 = page.locator('#oldSelectMenu');
   await expect(locator4).toHaveValue('1');
 
 });
