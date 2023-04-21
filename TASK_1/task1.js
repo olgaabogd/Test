@@ -27,6 +27,7 @@ test('byAnotherLocator', async ({ page }) => {
 test('byText', async ({ page }) => {
     await page.goto('https://www.onliner.by');
     await page
+    // @ts-ignore
     .getByRole('project-navigation__sign')
     .filter({ hasText: ' Электрические зубные щетки и ирригаторы ' })
 });
