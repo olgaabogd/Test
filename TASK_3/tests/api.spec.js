@@ -8,4 +8,8 @@ test ('Login', async ({page}) => {
   await page.getByPlaceholder('UserName').fill(credentials.userName);
   await page.getByPlaceholder('Password').fill(credentials.password);
   await page.locator('#login').click();
+
+  const locator = page.locator('.main-header');
+  await expect(locator).toHaveText('Profile');
+
 })
