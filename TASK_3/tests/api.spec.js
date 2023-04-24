@@ -26,7 +26,7 @@ test ('test1Cookies', async ({page}) => {
   //save variables
   const userID = cookies.find(c => c.name == 'userID').value;
   const token = cookies.find(c => c.name == 'token').value;
-  
+
   // block images
   await page.route('**/*', (route) => {
         return route.request().resourceType() === 'image'
@@ -46,4 +46,33 @@ test ('test1Cookies', async ({page}) => {
   const booksAmount = fullResponse.books.length
   await expect(page.locator(".action-buttons")).toHaveCount(booksAmount); //check that amount of books = UI amount of books
 
-}); 
+  //change the number of pages to a random number 
+  const randomNumberOfPages = (Math.random() * (1000 - 1) + 1).toString();
+  await page.route( "https://demoqa.com/BookStore/v1/Book?ISBN=*",
+    async (route) => {
+      const response = await route.fetch();
+      let body = await response.text(); //почему-то не работает напрямую с JSON, только через текст. Не очень разобралась в этой части теста
+      const searchBody = JSON.parse(body);
+
+      body = body.replace(searchBody.pages, randomNumberOfPages);
+      route.fulfill({
+        response,
+        body,
+        headers: {
+          ...response.headers(),
+        },
+      });
+    }
+  );
+
+  //click on a random book
+  var rand = Math.floor(Math.random() * fullResponse.books.length);
+  await page.locator(".action-buttons").nth(rand).click();
+
+  //check that the UI displays exactly the number that was specified earlier
+  await expect(page.locator("#pages-wrapper #userName-value")).toHaveText(
+    randomNumberOfPages
+  );
+
+  
+})
