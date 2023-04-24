@@ -26,5 +26,24 @@ test ('test1Cookies', async ({page}) => {
   //save variables
   const userID = cookies.find(c => c.name == 'userID').value;
   const token = cookies.find(c => c.name == 'token').value;
+  
+  // block images
+  await page.route('**/*', (route) => {
+        return route.request().resourceType() === 'image'
+            ? route.abort()
+            : route.continue()
+  
+  })
+  
+  //waiting to intercept a GET request 
+  const responsePromise = page.waitForResponse('https://demoqa.com/BookStore/v1/Books');
+  await page.locator('.text:text-is("Book Store")').click();
+  await page.screenshot({path: 'TASK_3/infoForTests/screenshot.png'});
+
+  const response = await responsePromise;
+  const fullResponse = await response.json();
+  expect (response.ok()); //check status 200
+  const booksAmount = fullResponse.books.length
+  await expect(page.locator(".action-buttons")).toHaveCount(booksAmount); //check that amount of books = UI amount of books
 
 }); 
