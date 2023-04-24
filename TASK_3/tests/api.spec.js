@@ -3,8 +3,8 @@ const { test, expect } = require('@playwright/test');
 
 import * as credentials from '../infoForTests/credentials.json';
 
-test ('testForCookiesAndBookStore', async ({page}) => {
-  //login
+test ('testFullApi', async ({page, request}) => {
+//login
   await page.goto('https://demoqa.com/login');
   await page.getByPlaceholder('UserName').fill(credentials.userName);
   await page.getByPlaceholder('Password').fill(credentials.password);
@@ -15,22 +15,22 @@ test ('testForCookiesAndBookStore', async ({page}) => {
   await page.waitForURL('https://demoqa.com/profile');
 
   const cookies = await page.context().cookies();
-  //cookies check
+//checkin cookies
   for (const cookie of cookies) {
     console.log(JSON.stringify(cookie))
   }
   
-    //save variables
+//save variables
   const userID = cookies.find(c => c.name == 'userID').value;
   const token = cookies.find(c => c.name == 'token').value;
 
-  //check that cookies are not empty
+//check that cookies are not empty
   await expect(cookies.find(c => c.name == 'userID').value).toBeTruthy();
   await expect(cookies.find(c => c.name == 'userName').value).toBeTruthy();
   await expect(cookies.find(c => c.name == 'expires').value).toBeTruthy();
   await expect(cookies.find(c => c.name == 'token').value).toBeTruthy();
 
-  // block images
+// block images
   await page.route('**/*', (route) => {
         return route.request().resourceType() === 'image'
             ? route.abort()
@@ -49,7 +49,7 @@ test ('testForCookiesAndBookStore', async ({page}) => {
   const booksAmount = fullResponse.books.length
   await expect(page.locator(".action-buttons")).toHaveCount(booksAmount); //check that amount of books = UI amount of books
 
-  //change the number of pages to a random number 
+//change the number of pages to a random number 
   const randomNumberOfPages = (Math.random() * (1000 - 1) + 1).toString();
   await page.route( "https://demoqa.com/BookStore/v1/Book?ISBN=*",
     async (route) => {
@@ -68,14 +68,31 @@ test ('testForCookiesAndBookStore', async ({page}) => {
     }
   );
 
-  //click on a random book
+//click on a random book
   var rand = Math.floor(Math.random() * fullResponse.books.length);
   await page.locator(".action-buttons").nth(rand).click();
 
-  //check that the UI displays exactly the number that was specified earlier
+//check that the UI displays exactly the number that was specified earlier
   await expect(page.locator("#pages-wrapper #userName-value")).toHaveText(
     randomNumberOfPages
   );
 
-  
-})
+//API request
+  const APIresponse = await request.get(`https://demoqa.com/Account/v1/User/${userID}`,
+//add token
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+
+// check response
+  const responseInfo = await APIresponse.json();
+  expect(responseInfo.username).toBe(credentials.userName);
+  if(responseInfo.length > 0) {
+    console.log('There are several books')
+  } else {
+      console.log('The number of books is 0')
+  };
+});
