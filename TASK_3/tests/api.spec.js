@@ -45,7 +45,8 @@ test ('testFullApi', async ({page, request}) => {
 
   const response = await responsePromise;
   const fullResponse = await response.json();
-  console.log('Response status is ' + response.status()); //check status 200
+  expect(response.status()).toBe(200); //check status 200
+  console.log('Response status is ' + response.status()); 
   const booksAmount = fullResponse.books.length
   await expect(page.locator(".action-buttons")).toHaveCount(booksAmount); //check that amount of books = UI amount of books
 
@@ -90,7 +91,7 @@ test ('testFullApi', async ({page, request}) => {
 // check response
   const responseInfo = await APIresponse.json();
   expect(responseInfo.username).toBe(credentials.userName);
-  if(responseInfo.length > 0) {
+    if(responseInfo.length > 0) {
     console.log('There are several books')
   } else {
       console.log('The number of books is 0')
