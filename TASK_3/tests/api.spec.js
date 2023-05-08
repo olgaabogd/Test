@@ -25,10 +25,10 @@ test ('testFullApi', async ({page, request}) => {
   const token = cookies.find(c => c.name == 'token').value;
 
 //check that cookies are not empty
-  await expect(cookies.find(c => c.name == 'userID').value).toBeTruthy();
-  await expect(cookies.find(c => c.name == 'userName').value).toBeTruthy();
-  await expect(cookies.find(c => c.name == 'expires').value).toBeTruthy();
-  await expect(cookies.find(c => c.name == 'token').value).toBeTruthy();
+  await expect(cookies.find(c => c.name === 'userID').value).toBeTruthy();
+  await expect(cookies.find(c => c.name === 'userName').value).toBeTruthy();
+  await expect(cookies.find(c => c.name === 'expires').value).toBeTruthy();
+  await expect(cookies.find(c => c.name === 'token').value).toBeTruthy();
 
 // block images
   await page.route('**/*', (route) => {
