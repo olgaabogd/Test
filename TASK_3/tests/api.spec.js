@@ -69,7 +69,7 @@ test ('testFullApi', async ({page, request}) => {
   );
 
 //click on a random book
-  var rand = Math.floor(Math.random() * fullResponse.books.length);
+  let rand = Math.floor(Math.random() * fullResponse.books.length);
   await page.locator(".action-buttons").nth(rand).click();
 
 //check that the UI displays exactly the number that was specified earlier
