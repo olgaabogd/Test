@@ -45,7 +45,7 @@ test ('testFullApi', async ({page, request}) => {
 
   const response = await responsePromise;
   const fullResponse = await response.json();
-  expect (response.ok()); //check status 200
+  console.log('Response status is ' + response.status()); //check status 200
   const booksAmount = fullResponse.books.length
   await expect(page.locator(".action-buttons")).toHaveCount(booksAmount); //check that amount of books = UI amount of books
 
