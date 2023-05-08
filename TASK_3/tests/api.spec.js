@@ -91,7 +91,8 @@ test ('testFullApi', async ({page, request}) => {
 // check response
   const responseInfo = await APIresponse.json();
   expect(responseInfo.username).toBe(credentials.userName);
-    if(responseInfo.length > 0) {
+  expect(responseInfo.books).toEqual([]);
+  if(responseInfo.length > 0) {
     console.log('There are several books')
   } else {
       console.log('The number of books is 0')
