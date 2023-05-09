@@ -1,9 +1,13 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
+
 import * as credentials from '../infoForTests/credentials.json';
+let responsePromise, fullResponse, token, userID, APIresponse;
+let randomNumberOfPages: string;
 
 test ('testFullApi', async ({page, request}) => {
 //login
+  await test.step(`Login`, async () => { 
   await page.goto('https://demoqa.com/login');
   await page.getByPlaceholder('UserName').fill(credentials.userName);
   await page.getByPlaceholder('Password').fill(credentials.password);
@@ -12,7 +16,9 @@ test ('testFullApi', async ({page, request}) => {
   const locator = page.locator('.main-header');
   await expect(locator).toHaveText('Profile');
   await page.waitForURL('https://demoqa.com/profile');
+  });
 
+  await test.step(`Check that cookies are not empty`, async () => {
   const cookies = await page.context().cookies();
 //checkin cookies
   for (const cookie of cookies) {
@@ -20,37 +26,45 @@ test ('testFullApi', async ({page, request}) => {
   }
   
 //save variables
-  const userID = cookies.find(c => c.name == 'userID').value;
-  const token = cookies.find(c => c.name == 'token').value;
+  userID = cookies.find(c => c.name === 'userID').value;
+  token = cookies.find(c => c.name === 'token').value;
 
 //check that cookies are not empty
   await expect(cookies.find(c => c.name === 'userID').value).toBeTruthy();
   await expect(cookies.find(c => c.name === 'userName').value).toBeTruthy();
   await expect(cookies.find(c => c.name === 'expires').value).toBeTruthy();
   await expect(cookies.find(c => c.name === 'token').value).toBeTruthy();
+});
 
-// block images
+//block images
+  await test.step(`Block all the images`, async () => {
   await page.route('**/*', (route) => {
-        return route.request().resourceType() === 'image'
-            ? route.abort()
-            : route.continue()
+  return route.request().resourceType() === 'image'
+  ? route.abort()
+  : route.continue()
   
   })
-  
+});
+
   //waiting to intercept a GET request 
-  const responsePromise = page.waitForResponse('https://demoqa.com/BookStore/v1/Books');
+  await test.step(`Intercept GET request, make screenshot`, async () => {
+  responsePromise = page.waitForResponse('https://demoqa.com/BookStore/v1/Books');
   await page.locator('.text:text-is("Book Store")').click();
   await page.screenshot({path: 'infoForTests/screenshot.png'});
-
+  });
+  
+  await test.step(`Check GET request`, async () => {
   const response = await responsePromise;
-  const fullResponse = await response.json();
+  fullResponse = await response.json();
   expect(response.status()).toBe(200); //check status 200
   console.log('Response status is ' + response.status()); 
   const booksAmount = fullResponse.books.length
   await expect(page.locator(".action-buttons")).toHaveCount(booksAmount); //check that amount of books = UI amount of books
+  });
 
 //change the number of pages to a random number 
-  const randomNumberOfPages = (Math.random() * (1000 - 1) + 1).toString();
+  await test.step(`Change the number of pages to a random number `, async () => {
+  randomNumberOfPages = (Math.random() * (1000 - 1) + 1).toString();
   await page.route( "https://demoqa.com/BookStore/v1/Book?ISBN=*",
     async (route) => {
       const response = await route.fetch();
@@ -67,18 +81,24 @@ test ('testFullApi', async ({page, request}) => {
       });
     }
   );
+  });
 
 //click on a random book
-  let rand = Math.floor(Math.random() * fullResponse.books.length);
-  await page.locator(".action-buttons").nth(rand).click();
+await test.step(`Click on a random book`, async () => {
+let rand = Math.floor(Math.random() * fullResponse.books.length);
+await page.locator(".action-buttons").nth(rand).click();
+});
 
 //check that the UI displays exactly the number that was specified earlier
+await test.step(`Check that the UI displays exactly the number that was specified earlier`, async () => {
   await expect(page.locator("#pages-wrapper #userName-value")).toHaveText(
     randomNumberOfPages
   );
+  });
 
 //API request
-  const APIresponse = await request.get(`https://demoqa.com/Account/v1/User/${userID}`,
+await test.step(`Add token`, async () => {
+  APIresponse = await request.get(`https://demoqa.com/Account/v1/User/${userID}`,
 //add token
     {
       headers: {
@@ -86,8 +106,10 @@ test ('testFullApi', async ({page, request}) => {
       },
     }
   );
+});
 
 // check response
+await test.step(`Check response`, async () => {
   const responseInfo = await APIresponse.json();
   expect(responseInfo.username).toBe(credentials.userName);
   expect(responseInfo.books).toEqual([]);
@@ -96,4 +118,5 @@ test ('testFullApi', async ({page, request}) => {
   } else {
       console.log('The number of books is 0')
   };
+});
 });
