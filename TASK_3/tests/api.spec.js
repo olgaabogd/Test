@@ -21,8 +21,8 @@ test ('testFullApi', async ({page, request}) => {
   }
   
 //save variables
-  const userID = cookies.find(c => c.name == 'userID').value;
-  const token = cookies.find(c => c.name == 'token').value;
+  const userID = cookies.find(c => c.name === 'userID').value;
+  const token = cookies.find(c => c.name === 'token').value;
 
 //check that cookies are not empty
   await expect(cookies.find(c => c.name === 'userID').value).toBeTruthy();
