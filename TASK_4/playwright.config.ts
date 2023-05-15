@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 /**
  * Read environment variables from file.
@@ -9,7 +9,7 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export default defineConfig({
+const defineConfig: PlaywrightTestConfig = {
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -32,11 +32,17 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    // {
-    //   name: 'chromium',
-    //   use: { ...devices['Desktop Chrome'] },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'], 
+      launchOptions: {
+        args: ['--start-maximized'],
+    },
+   },
+    //      launchOptions: {
+    //     args: ['--start-maximized'],
     // },
-
+    },
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },
@@ -62,10 +68,13 @@ export default defineConfig({
     //   name: 'Microsoft Edge',
     //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
     // },
-    {
-      name: 'Google Chrome',
-      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    },
+    // {
+    //   name: 'Google Chrome',
+    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+    //   launchOptions: {
+    //     args: ['--start-maximized'],
+    //   },
+    // },
   ],
 
   /* Run your local dev server before starting the tests */
@@ -74,4 +83,7 @@ export default defineConfig({
   //   url: 'http://127.0.0.1:3000',
   //   reuseExistingServer: !process.env.CI,
   // },
-});
+}
+
+export default defineConfig
+

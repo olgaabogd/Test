@@ -23,6 +23,10 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.8.8"
-    }
+    "logger": "^0.0.1",
+    "prettier": "^2.8.8",
+    "typescript-logging": "^2.1.0",
+    "typescript-logging-category-style": "^2.1.0",
+    "@playwright/test": "^1.33.0"
+  }
 }

@@ -1,7 +1,7 @@
 // @ts-check
-import { test, expect } from '@playwright/test'
+import { test, expect, chromium } from '@playwright/test'
 
-import * as credentials from '../infoFor/cred.json'
+import * as credentials from '../infoForTests/cred.json'
 
 let responsePromise
 let fullResponse
@@ -10,7 +10,16 @@ let userID
 let APIresponse
 let randomNumberOfPages: string
 
-test('testFullApi', async ({ page, request }) => {
+test('testFullApi', async ({ request }) => {
+  const browser = await chromium.launch({
+    logger: {
+      isEnabled: () => true,
+      log: (name, message, severity) =>
+        console.log(`${name} ${message} ${severity}`),
+    },
+  })
+  const context = await browser.newContext()
+  const page = await context.newPage()
   // login
   await test.step(`Login`, async () => {
     await page.goto('https://demoqa.com/login')
