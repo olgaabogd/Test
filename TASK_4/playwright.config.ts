@@ -36,7 +36,11 @@ const defineConfig: PlaywrightTestConfig = {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'], 
       launchOptions: {
-        args: ['--start-maximized'],
+      logger: {
+      isEnabled: () => true,
+      log: (name, message, severity) =>
+       console.log(`${name} ${message} ${severity}`),
+    }, 
     },
    },
     //      launchOptions: {

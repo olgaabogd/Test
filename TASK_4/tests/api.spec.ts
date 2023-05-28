@@ -11,13 +11,7 @@ let APIresponse
 let randomNumberOfPages: string
 
 test('testFullApi', async ({ request }) => {
-  const browser = await chromium.launch({
-    logger: {
-      isEnabled: () => true,
-      log: (name, message, severity) =>
-        console.log(`${name} ${message} ${severity}`),
-    },
-  })
+  const browser = await chromium.launch()
   const context = await browser.newContext()
   const page = await context.newPage()
   // login
