@@ -60,7 +60,6 @@ test("testFullApi", async ({ request }) => {
   // waiting to intercept a GET request
   await test.step("Intercept GET request, make screenshot", async () => {
     responsePromise = page.waitForResponse(
-      //????? - page object
       "https://demoqa.com/BookStore/v1/Books"
     );
 
