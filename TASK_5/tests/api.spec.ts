@@ -2,9 +2,15 @@
 import { test, expect, chromium } from "@playwright/test";
 import * as credentials from "../infoForTests/cred.json";
 
-import { LoginPage } from "../objects/loginPage";
-import { ProfilePage } from "../objects/profilePage";
-import { BookStorePage } from "../objects/bookStorePage";
+import { LoginPage } from "../pages/loginPage";
+import { ProfilePage } from "../pages/profilePage";
+import { BookStorePage } from "../pages/bookStorePage";
+import { RouteUtil } from "../utils/RouteUtil";
+import { ScreenshotUtil } from "../utils/ScreenshotUtil";
+import { RandomUtil } from "../utils/RandomUtil";
+import { ApiUtil } from "../utils/ApiUtil";
+import { CookiesUtil } from "../utils/CookiesUtil";
+import { UserInfoUtil } from "../utils/UserInfoUtil";
 
 let responsePromise;
 let responseInfo;
@@ -14,11 +20,7 @@ let userID;
 let APIresponse;
 let randomNumberOfPages: string;
 
-test("testFullApi", async ({ request }) => {
-  const browser = await chromium.launch();
-  const context = await browser.newContext();
-  const page = await context.newPage();
-
+test("testFullApi", async ({ page }) => {
   const loginPage = new LoginPage(page);
   const profilePage = new ProfilePage(page);
   const bookStorePage = new BookStorePage(page);
@@ -29,20 +31,19 @@ test("testFullApi", async ({ request }) => {
     await loginPage.fillInLoginFields();
     await loginPage.clickLoginButton();
 
-    const locator = page.locator(".main-header");
-    await expect(locator).toHaveText("Profile");
+    await expect(loginPage.header).toHaveText("Profile");
 
     await profilePage.waitForURL();
   });
 
   // checkin cookies
   await test.step("Check that cookies are not empty", async () => {
-    const cookies = await profilePage.getCookiesValues();
+    const cookies = await CookiesUtil.getCookiesValues(page);
     cookies.forEach((cookie) => console.log(JSON.stringify(cookie)));
 
     // save variables
-    userID = await profilePage.saveUserID();
-    token = await profilePage.saveToken();
+    userID = await UserInfoUtil.saveUserID(page);
+    token = await UserInfoUtil.saveToken(page);
 
     // check that cookies are not empty
     expect(cookies.find((c) => c.name === "userID").value).toBeTruthy();
@@ -53,8 +54,7 @@ test("testFullApi", async ({ request }) => {
 
   // block images
   await test.step("Block all the images", async () => {
-    await bookStorePage.goToBookStorePage();
-    await bookStorePage.blockImages();
+    await RouteUtil.blockImages(page);
   });
 
   // waiting to intercept a GET request
@@ -65,7 +65,7 @@ test("testFullApi", async ({ request }) => {
 
     await profilePage.goTo();
     await profilePage.clickBookStoreButton();
-    await bookStorePage.makeScreenshot();
+    await ScreenshotUtil.makeScreenshot(page);
   });
 
   await test.step("Check GET request", async () => {
@@ -75,28 +75,29 @@ test("testFullApi", async ({ request }) => {
     console.log(`Response status is ${response.status()}`);
 
     const booksAmount = fullResponse.books.length;
-    await expect(page.locator(".action-buttons")).toHaveCount(booksAmount); // check that amount of books = UI amount of books
+    await expect(bookStorePage.linksOnBooks).toHaveCount(booksAmount); // check that amount of books = UI amount of books
   });
 
   // change the number of pages to a random number
   await test.step(`Change the number of pages to a random number `, async () => {
-    await bookStorePage.changeNumberOfPagesToRandom(randomNumberOfPages);
+    await RouteUtil.changeNumberOfPagesToRandom(randomNumberOfPages, page);
   });
 
   // click on a random book
   await test.step(`Click on a random book`, async () => {
-    await bookStorePage.clickOnRandomBook(fullResponse);
+    await RandomUtil.selectRandomNumber(fullResponse);
+    //  await bookStorePage.clickOnRandomBook(randomNumber);
   });
 
   // check that the UI displays exactly the number that was specified earlier
   await test.step(`Check that the UI displays exactly the number that was specified earlier`, async () => {
-    const pagesNumber = await bookStorePage.checkSpecifiedNumberOfPagesOnUI();
+    const pagesNumber = await bookStorePage.findNumberOfPagesOnUI();
     expect(pagesNumber).toBe(randomNumberOfPages);
   });
 
   // API request
   await test.step(`Add token`, async () => {
-    APIresponse = await profilePage.addToken(userID, token);
+    APIresponse = await ApiUtil.getDataAboutUser(page, userID, token);
   });
 
   //check response
@@ -104,10 +105,5 @@ test("testFullApi", async ({ request }) => {
     responseInfo = await APIresponse.json();
     expect(responseInfo.username).toBe(credentials.userName);
     expect(responseInfo.books).toEqual([]);
-    if (responseInfo.length > 0) {
-      console.log("There are several books");
-    } else {
-      console.log("The number of books is 0");
-    }
   });
 });

@@ -6,12 +6,14 @@ export class LoginPage {
   readonly userNameField: Locator;
   readonly passwordField: Locator;
   readonly loginButton: Locator;
+  readonly header: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.userNameField = page.getByPlaceholder("UserName");
     this.passwordField = page.getByPlaceholder("Password");
     this.loginButton = page.locator("#login");
+    this.header = page.locator(".main-header");
   }
 
   async goto() {
