@@ -48,13 +48,13 @@ test("testFullApi", async ({ page }) => {
     token = await UserInfoUtil.saveToken(page);
 
     // check that cookies are not empty
-    userID = await CookiesUtil.getCookieValue(page, "userID");
+    userID = await CookiesUtil.getSpecificCookieValue(page, "userID");
     expect(userID).toBeTruthy();
-    userName = await CookiesUtil.getCookieValue(page, "userName");
+    userName = await CookiesUtil.getSpecificCookieValue(page, "userName");
     expect(userName).toBeTruthy();
-    expires = await CookiesUtil.getCookieValue(page, "expires");
+    expires = await CookiesUtil.getSpecificCookieValue(page, "expires");
     expect(expires).toBeTruthy();
-    token = await CookiesUtil.getCookieValue(page, "token");
+    token = await CookiesUtil.getSpecificCookieValue(page, "token");
     expect(token).toBeTruthy();
 
     // block images
