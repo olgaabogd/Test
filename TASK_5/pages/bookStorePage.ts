@@ -1,24 +1,26 @@
-import { Locator, Page } from "@playwright/test";
-import { RandomUtil } from "../utils/RandomUtil";
+import { Locator, Page } from '@playwright/test'
 
 export class BookStorePage {
-  readonly page: Page;
-  readonly linksOnBooks: Locator;
+  readonly page: Page
 
-  constructor(page: Page) {
-    this.page = page;
-    this.linksOnBooks = page.locator(".action-buttons");
+  readonly linksOnBooks: Locator
+
+  readonly bookForPagesAmountCheck: Locator
+
+  constructor(page) {
+    this.page = page
+    this.linksOnBooks = page.locator('.action-buttons')
   }
 
   async goToBookStorePage() {
-    await this.page.goto("https://demoqa.com/books");
+    await this.page.goto('https://demoqa.com/books')
   }
 
-  async clickOnRandomBook(randomNumber) {
-    await this.page.locator(".action-buttons").nth(randomNumber).click();
+  async clickBook() {
+    await this.page.getByText('Learning JavaScript Design Patterns').click()
   }
 
   async findNumberOfPagesOnUI() {
-    await this.page.locator("#pages-wrapper");
+    await this.page.locator('#pages-wrapper')
   }
 }

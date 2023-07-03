@@ -1,7 +1,7 @@
-import { Page } from "@playwright/test";
+import { Page } from '@playwright/test'
 
 export class ApiUtil {
-  static async getDataAboutUser(page: Page, userID: any, token: any) {
+  static async GetDataAboutUser(page: Page, userID: any, token: any) {
     const responseAPI = await page.request.get(
       `https://demoqa.com/Account/v1/User/${userID}`,
       {
@@ -9,7 +9,7 @@ export class ApiUtil {
           Authorization: `Bearer ${token}`,
         },
       }
-    );
-    return responseAPI;
+    )
+    return responseAPI
   }
 }
