@@ -9,7 +9,6 @@ import { RouteUtil } from '../utils/routeUtil'
 import { ScreenshotUtil } from '../utils/screenshotUtil'
 import { ApiUtil } from '../utils/apiUtil'
 import { CookiesUtil } from '../utils/cookiesUtil'
-// import { UserInfoUtil } from '../utils/userInfoUtil'
 
 let responsePromise
 let responseInfo
