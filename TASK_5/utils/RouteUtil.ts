@@ -9,8 +9,13 @@ export class RouteUtil {
     })
   }
 
+  static async GenerateRandomNumber(min, max) {
+    const randomNumberOfPages =
+      Math.floor(Math.random() * (max - min + 1)) + min
+    console.log(randomNumberOfPages)
+  }
+
   static async ChangeNumberOfPagesToRandom(randomNumberOfPages, page: Page) {
-    randomNumberOfPages = (Math.random() * (1000 - 1) + 1).toString()
     await page.route(
       'https://demoqa.com/BookStore/v1/Book?ISBN=*',
       async (route) => {

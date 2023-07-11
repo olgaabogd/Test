@@ -5,8 +5,6 @@ export class BookStorePage {
 
   readonly linksOnBooks: Locator
 
-  readonly bookForPagesAmountCheck: Locator
-
   constructor(page) {
     this.page = page
     this.linksOnBooks = page.locator('.action-buttons')
@@ -16,11 +14,12 @@ export class BookStorePage {
     await this.page.goto('https://demoqa.com/books')
   }
 
-  async clickBook() {
-    await this.page.getByText('Learning JavaScript Design Patterns').click()
+  async clickRandomBook(fullResponse) {
+    const rand = Math.floor(Math.random() * fullResponse.books.length)
+    await this.page.locator('.action-buttons').nth(rand).click()
   }
 
-  async findNumberOfPagesOnUI() {
+  async numberOfPagesLocator() {
     await this.page.locator('#pages-wrapper')
   }
 }
