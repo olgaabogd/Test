@@ -6,30 +6,25 @@ export class RouteUtil {
       return route.request().resourceType() === 'image'
         ? route.abort()
         : route.continue()
-    })
+    }
+    )
   }
 
-  static async GenerateRandomNumber(min, max) {
-    const randomNumberOfPages =
-      Math.floor(Math.random() * (max - min + 1)) + min
-    console.log(randomNumberOfPages)
-  }
-
-  static async ChangeNumberOfPagesToRandom(randomNumberOfPages, page: Page) {
+  static async ChangeNumberOfPages(page: Page, randomNumberOfPages: number) {
     await page.route(
       'https://demoqa.com/BookStore/v1/Book?ISBN=*',
       async (route) => {
         const response = await route.fetch()
-        let body = await response.text()
-        const searchBody = JSON.parse(body)
-
-        body = body.replace(searchBody.pages, randomNumberOfPages)
+        const body = await response.text()
+        const booksBody = JSON.parse(body)
+        const modifiedBody = body.replace(
+          booksBody.pages,
+          randomNumberOfPages.toString()
+        )
         route.fulfill({
           response,
-          body,
-          headers: {
-            ...response.headers(),
-          },
+          body: modifiedBody,
+          headers: { ...response.headers() },
         })
       }
     )

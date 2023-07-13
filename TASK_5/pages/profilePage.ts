@@ -1,10 +1,13 @@
-import { Page } from '@playwright/test'
+import { Locator, Page } from '@playwright/test'
 
 export class ProfilePage {
   readonly page: Page
 
+  readonly bookStoreButton: Locator
+
   constructor(page: Page) {
     this.page = page
+    this.bookStoreButton = page.locator('.text:text-is("Book Store")')
   }
 
   async waitForProfilePageToLoad() {
@@ -16,6 +19,6 @@ export class ProfilePage {
   }
 
   async clickBookStoreButton() {
-    await this.page.locator('.text:text-is("Book Store")').click()
+    await this.bookStoreButton.click()
   }
 }

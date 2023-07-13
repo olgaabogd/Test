@@ -9,12 +9,13 @@ import { RouteUtil } from '../utils/routeUtil'
 import { ScreenshotUtil } from '../utils/screenshotUtil'
 import { ApiUtil } from '../utils/apiUtil'
 import { CookiesUtil } from '../utils/cookiesUtil'
+import { RandomUtil } from '../utils/randomUtil'
 
 let responsePromise
 let token
 let userID
 let APIresponse
-let randomNumberOfPages: string
+let randomNumberOfPages: number
 let userName
 let fullResponse
 
@@ -73,19 +74,24 @@ test('testFullApi', async ({ page }) => {
 
   // change the number of pages to a random number
   await test.step(`Change the number of pages to a random number `, async () => {
-    await RouteUtil.GenerateRandomNumber(1, 1000)
-    await RouteUtil.ChangeNumberOfPagesToRandom(randomNumberOfPages, page)
+    randomNumberOfPages = await RandomUtil.GenerateRandomNumberForPagesAmount(
+      1,
+      1000
+    )
+    await RouteUtil.ChangeNumberOfPages(page, randomNumberOfPages)
   })
 
   // click on a book
   await test.step(`Click random book from the list`, async () => {
-    await bookStorePage.clickRandomBook(fullResponse)
+    const rand = await RandomUtil.SelectRandomBookNumber(fullResponse)
+    await bookStorePage.clickRandomBook(rand)
+    await bookStorePage.waitForBookDetails()
   })
 
   // check that the UI displays exactly the number that was specified earlier
   await test.step(`Check that the UI displays exactly the number that was specified earlier`, async () => {
-    const pagesNumber = await bookStorePage.numberOfPagesLocator()
-    expect(pagesNumber).toBe(randomNumberOfPages)
+    const pagesNumber = await bookStorePage.checkUIPagesAmount()
+    expect(pagesNumber).toBe(String(randomNumberOfPages))
   })
 
   // API request
