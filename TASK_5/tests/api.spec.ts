@@ -74,7 +74,7 @@ test('testFullApi', async ({ page }) => {
 
   // change the number of pages to a random number
   await test.step(`Change the number of pages to a random number `, async () => {
-    randomNumberOfPages = await RandomUtil.GenerateRandomNumberForPagesAmount(
+    randomNumberOfPages = await RandomUtil.GenerateRandomNumber(
       1,
       1000
     )
@@ -83,15 +83,16 @@ test('testFullApi', async ({ page }) => {
 
   // click on a book
   await test.step(`Click random book from the list`, async () => {
-    const rand = await RandomUtil.SelectRandomBookNumber(fullResponse)
+    const rand = await RandomUtil.GenerateRandomNumber (0, fullResponse.books.length)
     await bookStorePage.clickRandomBook(rand)
     await bookStorePage.waitForBookDetails()
   })
 
   // check that the UI displays exactly the number that was specified earlier
-  await test.step(`Check that the UI displays exactly the number that was specified earlier`, async () => {
-    const pagesNumber = await bookStorePage.checkUIPagesAmount()
+  await test.step(`Confirm that the UI displays exactly the number that was specified earlier`, async () => {
+    const pagesNumber = await bookStorePage.getUIPagesAmount()
     expect(pagesNumber).toBe(String(randomNumberOfPages))
+  
   })
 
   // API request

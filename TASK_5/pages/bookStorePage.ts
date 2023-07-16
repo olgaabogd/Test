@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test'
+import { Locator, Page, Selectors } from '@playwright/test'
 
 export class BookStorePage {
   readonly page: Page
@@ -9,11 +9,14 @@ export class BookStorePage {
 
   readonly infoLineInBookDetails: Locator
 
+  readonly bookWrapperSelector: string
+
   constructor(page) {
     this.page = page
     this.linksOnBooks = page.locator('.action-buttons')
     this.numberOfPagesOnUI = page.locator('#pages-wrapper')
     this.infoLineInBookDetails = page.locator('#pages-wrapper > div.col-md-9.col-sm-12')
+    this.bookWrapperSelector = '.books-wrapper'
   }
 
   async goToBookStorePage() {
@@ -25,13 +28,13 @@ export class BookStorePage {
   }
 
   async waitForBookDetails() {
-    await this.page.waitForSelector('.books-wrapper')
+    await this.page.waitForSelector(this.bookWrapperSelector)
   }
 
-  async checkUIPagesAmount() {
+  async getUIPagesAmount() {
     const element = await this.infoLineInBookDetails;
-    const value = await element.evaluate(el => el.textContent);
-    return value;
+    return await element.evaluate(el => el.textContent);
+    
   }
 
 
