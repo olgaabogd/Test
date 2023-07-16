@@ -1,5 +1,6 @@
 // @ts-check
 import { test, expect } from '@playwright/test'
+import 'expect-playwright'
 import * as credentials from '../infoForTests/cred.json'
 
 import { LoginPage } from '../pages/loginPage'
@@ -15,7 +16,7 @@ let responsePromise
 let token
 let userID
 let APIresponse
-let randomNumberOfPages: number
+let randomNumberOfPages: string
 let userName
 let fullResponse
 
@@ -74,16 +75,16 @@ test('testFullApi', async ({ page }) => {
 
   // change the number of pages to a random number
   await test.step(`Change the number of pages to a random number `, async () => {
-    randomNumberOfPages = await RandomUtil.GenerateRandomNumber(
-      1,
-      1000
-    )
+    randomNumberOfPages = await RandomUtil.GenerateRandomNumber(1, 1000)
     await RouteUtil.ChangeNumberOfPages(page, randomNumberOfPages)
   })
 
   // click on a book
   await test.step(`Click random book from the list`, async () => {
-    const rand = await RandomUtil.GenerateRandomNumber (0, fullResponse.books.length)
+    const rand = await RandomUtil.GenerateRandomNumber(
+      0,
+      fullResponse.books.length
+    )
     await bookStorePage.clickRandomBook(rand)
     await bookStorePage.waitForBookDetails()
   })
@@ -91,8 +92,7 @@ test('testFullApi', async ({ page }) => {
   // check that the UI displays exactly the number that was specified earlier
   await test.step(`Confirm that the UI displays exactly the number that was specified earlier`, async () => {
     const pagesNumber = await bookStorePage.getUIPagesAmount()
-    expect(pagesNumber).toBe(String(randomNumberOfPages))
-  
+    await expect(pagesNumber).toEqual(randomNumberOfPages.toString())
   })
 
   // API request

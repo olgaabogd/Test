@@ -6,11 +6,10 @@ export class RouteUtil {
       return route.request().resourceType() === 'image'
         ? route.abort()
         : route.continue()
-    }
-    )
+    })
   }
 
-  static async ChangeNumberOfPages(page: Page, randomNumberOfPages: number) {
+  static async ChangeNumberOfPages(page: Page, randomNumberOfPages: string) {
     await page.route(
       'https://demoqa.com/BookStore/v1/Book?ISBN=*',
       async (route) => {
