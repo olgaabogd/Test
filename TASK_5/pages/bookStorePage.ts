@@ -36,7 +36,7 @@ export class BookStorePage {
   }
 
   async getUIPagesAmount() {
-    const element = await this.infoLineInBookDetails
+    const element = this.infoLineInBookDetails
     return element.evaluate((el) => el.textContent)
   }
 }
