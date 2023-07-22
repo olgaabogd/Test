@@ -7,8 +7,7 @@ export class ActionPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.actionAndTrending = page.locator(
-      '.saleitembrowser_FlavorLabel_Dhg57 Focusable:has-text("New & Trending")'
+    this.actionAndTrending = page.getByText("New & Trending"
     );
   }
 

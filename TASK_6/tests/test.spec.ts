@@ -26,4 +26,9 @@ test("steamTest", async ({ page }) => {
     await mainStorePage.clickCategoryNameInTheList("Action"); // select Action
     await mainStorePage.waitForURLForExactCategory(); // make sure that needed page has opened
   });
-});
+
+  //3
+ 
+   
+    })
+    
