@@ -1,6 +1,5 @@
 // @ts-check
 import { test, expect } from '@playwright/test'
-import 'expect-playwright'
 import * as credentials from '../infoForTests/cred.json'
 
 import { LoginPage } from '../pages/loginPage'
@@ -91,8 +90,9 @@ test('testFullApi', async ({ page }) => {
 
   // check that the UI displays exactly the number that was specified earlier
   await test.step(`Confirm that the UI displays exactly the number that was specified earlier`, async () => {
-    const pagesNumber = await bookStorePage.getUIPagesAmount()
-    await expect(pagesNumber).toEqual(randomNumberOfPages.toString())
+    await expect(bookStorePage.infoLineInBookDetails).toHaveText(
+      randomNumberOfPages.toString()
+    )
   })
 
   // API request
