@@ -11,8 +11,6 @@ export class BookStorePage {
 
   readonly bookWrapperSelector: string
 
-  readonly locator: Locator
-
   constructor(page) {
     this.page = page
     this.linksOnBooks = page.locator('.action-buttons')
