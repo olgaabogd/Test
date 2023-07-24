@@ -34,9 +34,4 @@ export class BookStorePage {
   async waitForBookDetails() {
     await this.page.waitForSelector(this.bookWrapperSelector)
   }
-
-  async getUIPagesAmount() {
-    const element = this.infoLineInBookDetails
-    return element.textContent.toString()
-  }
 }
