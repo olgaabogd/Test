@@ -5,9 +5,12 @@ export class MainStorePage {
 
   readonly categories: Locator
 
+  readonly installSteamButton: Locator
+
   constructor(page: Page) {
     this.page = page
     this.categories = page.locator('.pulldown_desktop:has-text("Categories")')
+     this.installSteamButton = page.getByText('Install Steam')
   }
 
   async goto() {
@@ -33,5 +36,9 @@ export class MainStorePage {
     await this.page.waitForURL(
       'https://store.steampowered.com/category/action/'
     )
+  }
+
+  async clickInstallSteam() {
+    await this.installSteamButton.click()
   }
 }
