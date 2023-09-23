@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test'
 
-export class NewTrendingPage {
+export class NewAndTrendingPage {
   readonly page: Page
 
   readonly installSteamButton: Locator
@@ -10,7 +10,11 @@ export class NewTrendingPage {
     this.installSteamButton = page.getByText('Install Steam')
   }
 
-  async clickInstallSteamButton() {
-    await this.installSteamButton.click()
+  async waitForURLOfNewAndTrendingPage() {
+    await this.page.waitForURL('https://store.steampowered.com/category/action/?flavor=contenthub_newandtrending')
   }
+
+//   async clickInstallSteamButton() {
+//     await this.installSteamButton.click()
+//   }
 }
